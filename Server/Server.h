@@ -17,10 +17,10 @@
 class Server
 {
 	public:
-		void createSocket(std::string portNumber);
-		void receiveCalls();
+		int createSocket(std::string portNumber);
+		int receiveCall();
 		
-		void addData(std::string textFile);
+		bool addData(std::string textFile);
 		void printData();
 	private:
 		std::vector<std::string> nicknames;

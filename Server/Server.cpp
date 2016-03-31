@@ -1,10 +1,11 @@
 #include "Server.h"
 
-void Server::createSocket(std::string portNumber)
+int Server::createSocket(std::string portNumber)
 {
-	char hostName[128];
+	char hostName[256];
 	
-	gethostname(hostName, sizeof hostName);
+	gethostname(hostName, sizeof hostName+1);
+	std::cout<<"HOSTNAME: "<<hostName<<"\n";
 	
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC;
@@ -20,18 +21,22 @@ void Server::createSocket(std::string portNumber)
 	bind(sockfd, res->ai_addr, res->ai_addrlen);
 	listen(sockfd, 10);
 	
+	return(sockfd);
+	
 }
 
-void Server::receiveCalls()
+int Server::receiveCall()
 {
 	struct sockaddr_storage their_addr;
 	socklen_t addr_size;
 	
 	addr_size = sizeof their_addr;
 	new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+	
+	return(new_fd);
 }
 
-void Server::addData(std::string textFile)
+bool Server::addData(std::string textFile)
 {
 	std::string name;
 	std::string grade;
@@ -41,6 +46,7 @@ void Server::addData(std::string textFile)
 	
 	if(fin.is_open())
 	{
+		std::cout<<"Text file opened successfully.\n";
 		while(!fin.eof())
 		{
 			fin >> name;
@@ -50,6 +56,14 @@ void Server::addData(std::string textFile)
 			grades.push_back(grade);
 		}
 	}
+	else
+	{
+		std::cout<<"Unable to open file.\n";
+		return false;
+	}
+	
+	return true;
+	
 }
 
 void Server::printData()
@@ -59,3 +73,18 @@ void Server::printData()
 		std::cout<<nicknames[i]<<" "<<grades[i]<<"\n";
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,14 +17,13 @@
 class Client
 {
 	public:
-		void createSocket(std::string hostName, std::string portNumber);
+		int createSocket(std::string hostName, std::string portNumber);
+		int makeCall();
 	private:
 		int status;
 		int sockfd;
 		struct addrinfo hints;
 		struct addrinfo *res;
-};
-	
 };
 
 #endif
