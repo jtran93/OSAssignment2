@@ -18,10 +18,14 @@ class Client
 {
 	public:
 		int createSocket(std::string hostName, std::string portNumber);
-		int makeCall();
+		bool makeCall();
+		std::string receiveMessage();
+		void sendMessage(std::string nickname);
 	private:
 		int status;
 		int sockfd;
+		int byte_buffer;
+		char msg[2048];
 		struct addrinfo hints;
 		struct addrinfo *res;
 };

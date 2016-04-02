@@ -8,52 +8,63 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <sstream>
 
 int main()
 {
 	Client client;
 	
-	int test;
+	bool test = false;
 	int sockfd;
-	int byte_buffer;
+	int j;
 	
-	char msg[512];
-	
+	std::stringstream ss;
 	std::string hostName;
 	std::string portNumber;
 	std::string nickname;
+	std::string grade;
+
 	
-	std::cout<<"Enter a server host name: ";
-	std::cin>>hostName;
-	std::cout<<"Enter a server port number: ";
-	std::cin>>portNumber;
+	while (test == false)
+	{
+		std::cout<<"Enter a server host name: ";
+		std::cin>>hostName;
+		std::cout<<"Enter a server port number (>= 1024): ";
+		std::cin>>portNumber;
+		
+		std::istringstream(portNumber) >> j;
+		
+		if(j < 1024)
+		{
+			std::cout<<"Port number must be >= 1024.\n";
+		}
+		else
+		{
+			sockfd = client.createSocket(hostName, portNumber);
+			test = client.makeCall();
+		}
+	}
 	
-	sockfd = client.createSocket(hostName, portNumber);
-	
+	std::cin.ignore();
 	do
 	{
-		test = client.makeCall();
-		if(test == -1)
-		{
-			std::cout<<"Could not connect call.\n";
-		}
+		nickname.clear();
+		grade.clear();
 		
 		std::cout<<"Enter a student nickname: ";
-		std::cin>>nickname;
-		
-		byte_buffer = send(sockfd, nickname.c_str(), sizeof nickname, 0);
-		std::cout<<"Byte Buffer: "<<byte_buffer<<" Len: "<<sizeof nickname<<"\n";
-		//byte_buffer = recv(sockfd, msg, sizeof msg, 0);
-		
-		test = shutdown(sockfd, 2);
-		if(test == 0)
+		getline(std::cin, nickname);
+		if(!nickname.empty())
 		{
-			std::cout<<"Close successful\n";
-		}else 
-		{std::cout<<"Did not close\n";}
-	}while(nickname != "");
-	
-	
+			client.sendMessage(nickname);
+			grade = client.receiveMessage();
+			std::cout<<"Student "<<nickname.c_str()<<" got "<<grade<<" on the quiz.\n";
+		}
+		
+		close(sockfd);
+		sockfd = client.createSocket(hostName, portNumber);
+		client.makeCall();
+
+	}while(!nickname.empty());
 	
 	
 	

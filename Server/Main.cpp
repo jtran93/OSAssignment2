@@ -8,48 +8,61 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <time.h>
+#include <sstream>
 
 int main()
 {
-	Server server;
-	int test;
-	int sockfd;
-	int new_sockfd;
-	int byte_buffer;
-	char msg[512];
-	bool txtTest = false;
+	srand(time(NULL));
 	
-	std::string nickname;
+	Server server;
+	
+	bool test = false;
+	
+	int j;
+	
+	std::string nickname = " ";
+	std::string grade;
 	std::string textFile;
 	std::string portNumber;
 	
-	while(txtTest == false)
+	while(test == false)
 	{
-		std::cout<<"Enter the name of the text file: ";
+		std::cout<<"Enter the name of the text file (include .txt extension): ";
 		std::cin>>textFile;
-		txtTest = server.addData(textFile);
+		test = server.addData(textFile);
 	}
 	
-	std::cout<<"Enter server port number: ";
-	std::cin>>portNumber;
-
-	sockfd = server.createSocket(portNumber);
+	test = false;
 	
-	do
+	while(test == false)
+	{
+		std::cout<<"Enter server port number (>= 1024): ";
+		std::cin>>portNumber;
+		std::istringstream(portNumber) >> j;
+		if(j < 1024)
+		{
+			std::cout<<"Port number must be >= 1024.\n";
+		}
+		else
+			test = true;
+	}
+	
+	server.createSocket(portNumber);
+	
+	while(!nickname.empty())
 	{
 		nickname.clear();
-		new_sockfd = server.receiveCall();
+		grade.clear();
 		
-		if(new_sockfd == -1)
-		{	
-			std::cout<<"Call was not accepted correctly\n";
-		}
-
-		byte_buffer = recv(new_sockfd, msg, sizeof msg, 0);
-		nickname = std::string (msg);
+		server.receiveCall();
+		nickname = server.receiveMessage();
+		grade = server.getGrade(nickname);
+		server.sendMessage(grade);
 		std::cout<<"The nickname is: "<<nickname<<"\n";
+		std::cout<<"Student "<<nickname<<" got "<<grade<<" on the quiz.\n";
 		
-	}while(nickname != "");
+	}
 	
 	
 	

@@ -32,8 +32,47 @@ int Server::receiveCall()
 	
 	addr_size = sizeof their_addr;
 	new_fd = accept(sockfd, (struct sockaddr *)&their_addr, &addr_size);
+	if(new_fd == -1)
+	{	
+		std::cout<<"Call was not accepted correctly\n";
+	}
 	
 	return(new_fd);
+}
+
+std::string Server::receiveMessage()
+{
+	
+	memset(msg,0,sizeof msg);
+	byte_buffer = recv(new_fd, msg, sizeof msg, 0);
+	//byte_buffer = read(new_fd, msg, sizeof msg);
+	
+	return std::string(msg);
+}
+
+void Server::sendMessage(std::string grade)
+{
+	byte_buffer = send(new_fd, grade.c_str(), sizeof grade, 0);
+}
+
+std::string Server::getGrade(std::string nickname)
+{
+	int notFoundGrade = 0;
+	std::stringstream ss;
+	
+	for(int i = 0; i<nicknames.size(); i++)
+	{
+		if(nickname == nicknames[i])
+		{
+			return grades[i];
+		}
+	}
+	
+	notFoundGrade = rand()%(45) + 55;
+	ss<<notFoundGrade;
+	std::string str = ss.str();
+	
+	return str;
 }
 
 bool Server::addData(std::string textFile)
