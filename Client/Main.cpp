@@ -58,11 +58,14 @@ int main()
 			client.sendMessage(nickname);
 			grade = client.receiveMessage();
 			std::cout<<"Student "<<nickname.c_str()<<" got "<<grade<<" on the quiz.\n";
+			close(sockfd);
+			sockfd = client.createSocket(hostName, portNumber);
+			client.makeCall();
 		}
-		
-		close(sockfd);
-		sockfd = client.createSocket(hostName, portNumber);
-		client.makeCall();
+		else
+		{
+			std::cout<<"Client has been terminated\n";
+		}
 
 	}while(!nickname.empty());
 	

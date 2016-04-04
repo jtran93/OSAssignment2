@@ -57,11 +57,17 @@ int main()
 		
 		server.receiveCall();
 		nickname = server.receiveMessage();
-		grade = server.getGrade(nickname);
-		server.sendMessage(grade);
-		std::cout<<"The nickname is: "<<nickname<<"\n";
-		std::cout<<"Student "<<nickname<<" got "<<grade<<" on the quiz.\n";
-		
+		if(!nickname.empty())
+		{
+			grade = server.getGrade(nickname);
+			server.sendMessage(grade);
+			std::cout<<"The nickname is: "<<nickname<<"\n";
+			std::cout<<"Student "<<nickname<<" got "<<grade<<" on the quiz.\n";
+		}
+		else
+		{
+			std::cout<<"Client has closed connection\n";
+		}
 	}
 	
 	
