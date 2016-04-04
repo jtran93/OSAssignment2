@@ -1,3 +1,11 @@
+/*
+	Johnathan Tran
+	Peoplesoft ID: 1078586
+	Submission Date: 4/4/16
+	Cosc 3360
+	OSAssignment2
+*/
+
 #include "Client.h"
 
 int Client::createSocket(std::string hostname, std::string portNumber)
