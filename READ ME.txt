@@ -1,0 +1,11 @@
+1) Compile Server 
+	 g++ Main.cpp Server.cpp
+	 Run executable
+	 Input name of .txt file
+	 Input port number
+	 Wait for Client connection
+2) Compile Client
+	 g++ Main.cpp Client.cpp
+	 Run executable
+	 Input Host Name and Port number, if either are incorrect, error is given
+	 Ask for grades!
